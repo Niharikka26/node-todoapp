@@ -13,3 +13,5 @@ export const sendCookie=(user,res,message,statusCode=200)=>{
       message:message,
     })
 };
+
+// mongodb+srv://niharika:Niharika@cluster0.gicth.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

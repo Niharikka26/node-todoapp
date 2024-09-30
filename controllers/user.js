@@ -1,6 +1,7 @@
 import { User } from "../model/user.js";
 import bcrypt from "bcrypt";
 import { sendCookie } from "../utils/feature.js";
+import ErrorHandler from "../middlewares/error.js";
 
 // export const getAllUsers=async (req,res)=>{
 
@@ -13,9 +14,9 @@ import { sendCookie } from "../utils/feature.js";
 //     users,
 //   })};
 
-  export const  Registered  =async (req,res)=>{
-    try {
-      const {name,email,password}= req.body;
+  export const  Registered  =async (req,res,next)=>{
+      try {
+        const {name,email,password}= req.body;
      let user=await User.findOne({email});
      if(user)
       return next(new ErrorHandler("User already exist",400));
@@ -37,9 +38,9 @@ import { sendCookie } from "../utils/feature.js";
    });
 
    sendCookie(user,res,"Registered successfully",201);
-    } catch (error) {
-      next(error);
-    }
+      } catch (error) {
+        next(error);
+      }
   };
 
 
@@ -51,36 +52,38 @@ import { sendCookie } from "../utils/feature.js";
   // };
  export const login= async(req,res,next)=>{
 
-  try {
+   try {
     const {email,password}= req.body;
-  let user= await User.findOne({email}).select("+password");
-
-  if(!user)
-    return next(new ErrorHandler("Invalid email or password",400));
-  // if(!user)
-  // {
-  //   return res.status(404).json({
-  //     success:false,
-  //     message: "Invalid email or password",
-  //   }) ;
-  // }
-
-  const isMatch= await bcrypt.compare(password, user.password);
-
-  if(!isMatch)
-    return next(new ErrorHandler("Invalid email or password",400));
-  // if(!isMatch)
-  // {
-  //   return res.status(404).json({
-  //     success:false,
-  //     message: "Invalid email or password",
-  //   }) ;
-  // }
-
-  sendCookie(user,res,`Welcome back, ${user.name}`,200);
-  } catch (error) {
+    let user= await User.findOne({email}).select("+password");
+  
+    if(!user)
+      return next(new ErrorHandler("Invalid email or password",400));
+    // if(!user)
+    // {
+    //   return res.status(404).json({
+    //     success:false,
+    //     message: "Invalid email or password",
+    //   }) ;
+    // }
+  
+    const isMatch= await bcrypt.compare(password, user.password);
+  
+    if(!isMatch)
+      return next(new ErrorHandler("Invalid email or password",400));
+    // if(!isMatch)
+    // {
+    //   return res.status(404).json({
+    //     success:false,
+    //     message: "Invalid email or password",
+    //   }) ;
+    // }
+  
+    sendCookie(user,res,`Welcome back, ${user.name}`,200);
+  
+    
+   } catch (error) {
     next(error);
-  }
+   }
 
  };
 
