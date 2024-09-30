@@ -101,6 +101,7 @@ import ErrorHandler from "../middlewares/error.js";
     secure: process.env.NODE_ENV==="Development"? false:true,
    }).json({
       success:true,
+      user: req.user,
     }) ;
   };
 
